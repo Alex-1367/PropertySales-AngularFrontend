@@ -1,0 +1,60 @@
+<!-- src/app/pages/about-page/about-page.component.html -->
+<app-header />
+
+<main class="main">
+  <div class="container">
+    <div class="about-section">
+      <h1>{{ contentService.content().aboutTitle }} {{ config.companyName }}</h1>
+      
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            {{ contentService.content().aboutWelcome.replace('{companyName}', config.companyName) }}
+          </p>
+          
+          <p>
+            {{ contentService.content().aboutExperience }}
+          </p>
+          
+          <h2>{{ contentService.content().whyChooseUs }}</h2>
+          <ul>
+            @for (item of contentService.content().whyChooseItems; track $index) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+          
+          <h2>{{ contentService.content().contactInfo }}</h2>
+          <div class="contact-info">
+            <p><strong>{{ contentService.content().manager }}:</strong> {{ config.managerName }}</p>
+            <p><strong>{{ contentService.content().phone }}:</strong> <a [href]="'tel:' + config.managerPhone">{{ config.managerPhone }}</a></p>
+            <p><strong>WhatsApp:</strong> <a [href]="config.whatsappChannel" target="_blank" rel="noopener noreferrer">{{ contentService.content().chatWhatsapp }}</a></p>
+            <p><strong>Telegram:</strong> <a [href]="config.telegramChannel" target="_blank" rel="noopener noreferrer">{{ contentService.content().chatTelegram }}</a></p>
+          </div>
+        </div>
+        
+        <div class="manager-card">
+          <img 
+            [src]="managerPhoto" 
+            [alt]="'Manager ' + config.managerName"
+            class="manager-photo"
+            loading="lazy"
+            (error)="managerPhoto = 'https://via.placeholder.com/180x180?text=Manager'"
+          >
+          <h3>{{ config.managerName }}</h3>
+          <p class="manager-title">{{ contentService.content().propertyManager }}</p>
+          <p class="manager-phone">{{ config.managerPhone }}</p>
+          <div class="manager-social">
+            <a [href]="config.whatsappChannel" target="_blank" rel="noopener noreferrer" class="social-btn whatsapp">
+              {{ contentService.content().whatsappText }}
+            </a>
+            <a [href]="config.telegramChannel" target="_blank" rel="noopener noreferrer" class="social-btn telegram">
+              {{ contentService.content().telegramText }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer />

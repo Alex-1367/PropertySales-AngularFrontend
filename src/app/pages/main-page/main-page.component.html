@@ -1,0 +1,63 @@
+<!-- src/app/pages/main-page/main-page.component.html -->
+<app-header />
+
+<main class="main">
+  <div class="container">
+    <section class="hero">
+      <h1>{{ contentService.content().heroTitle }}</h1>
+      <p>{{ contentService.content().heroSubtitle }}</p>
+    </section>
+    
+    <app-filter-bar (filtersChange)="onFiltersChange($event)" [showAllTypes]="true" />
+    
+    @if (propertyService.isLoading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>{{ contentService.content().loadingText }}</p>
+      </div>
+    } @else {
+      @for (section of visibleSections(); track section.type) {
+        <section class="property-section" [style.border-top-color]="section.color">
+          <div class="section-header">
+            <div>
+              <h2>{{ section.label }}</h2>
+              @if (section.totalCount > 0) {
+                <span class="property-count">{{ section.totalCount }} {{ contentService.content().propertiesAvailable }} </span>
+              }
+            </div>
+            @if (section.showViewAll) {
+              <a [routerLink]="section.route" class="view-all-btn">
+                {{ contentService.content().viewAllText }} ({{ section.totalCount }}) →
+              </a>
+            }
+          </div>
+          <div class="property-grid">
+            @for (property of section.properties; track property.id) {
+              <app-property-card [property]="property" />
+            }
+          </div>
+          @if (!section.showViewAll && section.totalCount > 0) {
+            <div class="section-footer">
+              <span class="all-shown-text">All {{ section.totalCount }} properties shown</span>
+            </div>
+          }
+        </section>
+      }
+      
+      @if (visibleSections().length === 0 && !propertyService.isLoading()) {
+        <div class="no-results">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <p>{{ contentService.content().noResultsText }}</p>
+          <button class="reset-btn" (click)="onFiltersChange({ type: '', minPrice: null, maxPrice: null, location: '', minSize: null, bedrooms: null })">
+           {{ contentService.content().resetFiltersText }}
+          </button>
+        </div>
+      }
+    }
+  </div>
+</main>
+
+<app-footer />

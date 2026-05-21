@@ -1,0 +1,62 @@
+<!-- src/app/pages/property-list-page/property-list-page.component.html -->
+<app-header />
+
+<main class="main">
+  <div class="container">
+    <div class="page-header" [style.border-bottom-color]="color">
+      <div class="header-content">
+        <div class="header-icon">{{ icon() }}</div>
+        <div class="header-text">
+          <h1>{{ title() }}</h1>
+        </div>
+      </div>
+      <div class="header-stats">
+        <span class="stat-badge">
+          {{ totalCount() }} {{ contentService.content().propertiesAvailable }}
+        </span>
+      </div>
+    </div>
+    
+    <app-filter-bar [fixedType]="propertyType" [showAllTypes]="false" (filtersChange)="onFiltersChange($event)" />
+    
+    @if (propertyService.isLoading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>{{ contentService.content().loadingText }}</p>      
+      </div>
+    } @else {
+      @if (filteredProperties().length > 0) {
+        <div class="results-info">
+          <p>{{ contentService.content().showingText }} {{ startRange() }} - {{ endRange() }} {{ contentService.content().ofText }} {{ totalCount() }} {{ contentService.content().propertiesText }}</p>
+          <button class="reset-filters-btn" (click)="resetFilters()" *ngIf="hasActiveFilters()">
+            {{ contentService.content().clearFiltersText }}
+          </button>
+        </div>
+        
+        <div class="property-grid">
+          @for (property of paginatedProperties(); track property.id) {
+            <app-property-card [property]="property" />
+          }
+        </div>
+        
+        <app-pagination 
+          [currentPage]="currentPage()"
+          [totalPages]="totalPages()"
+          (pageChange)="onPageChange($event)"
+        />
+      } @else {
+        <div class="no-results">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <h3>{{ contentService.content().noPropertiesFound }}</h3>
+          <p>{{ contentService.content().tryAdjustingFilters }}</p>
+          <button class="reset-btn" (click)="resetFilters()">{{ contentService.content().resetAllFilters }}</button>
+        </div>
+      }
+    }
+  </div>
+</main>
+
+<app-footer />

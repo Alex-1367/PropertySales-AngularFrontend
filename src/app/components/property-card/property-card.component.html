@@ -1,0 +1,66 @@
+<!-- src/app/components/property-card/property-card.component.html -->
+<div class="property-card" [class.featured]="property.featured">
+  <div class="card-image-container">
+    <a [routerLink]="['/property', property.id]" class="image-link">
+      <img 
+        [src]="property.mainImage" 
+        [alt]="property.title"
+        loading="lazy"
+        (error)="onImageError($event)"
+      >
+    </a>
+    @if (property.featured) {
+      <span class="featured-badge">FEATURED</span>
+    }
+    @if (property.priceRaw && property.priceRaw < 100000) {
+      <span class="price-badge">Budget Friendly</span>
+    }
+  </div>
+  
+  <div class="card-content">
+    <h3 class="property-title">{{ property.title | slice:0:60 }}{{ property.title.length > 60 ? '...' : '' }}</h3>
+    
+    <div class="property-details">
+      @if (property.size) {
+        <span class="detail">
+          📐 {{ property.size }} m²
+        </span>
+      }
+      @if (property.bedrooms) {
+        <span class="detail">
+          🛏️ {{ property.bedrooms }} {{ contentService.content().bedroomsText }}
+        </span>
+      }
+      @if (property.bathrooms) {
+        <span class="detail">
+          🛁 {{ property.bathrooms }} {{ contentService.content().bathroomsText }}
+        </span>
+      }
+      @if (property.distanceToSea) {
+        <span class="detail">
+          🌊 {{ property.distanceToSea }}m {{ contentService.content().toSeaText }}
+        </span>
+      }
+    </div>
+    
+    <div class="property-location">
+      📍 {{ property.location || property.city || property.region || 'Montenegro' }}
+    </div>
+    
+    <div class="price">{{ formatPrice(property.price) }}</div>
+    
+    <div class="card-actions">
+      <a [routerLink]="['/property', property.id]" class="btn-details">
+        {{ contentService.content().moreDetails }}
+      </a>
+      <div class="social-links">
+        <a [href]="getWhatsappLink(property)" target="_blank" class="social-icon whatsapp" title="WhatsApp">
+          💬
+        </a>
+        <a [href]="getTelegramLink(property)" target="_blank" class="social-icon telegram" title="Telegram">
+          📱
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<!-- src/app/components/footer/footer.component.html -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>{{ config.companyName }}</h4>
+      <p>{{ contentService.content().footerTagline }}</p>
+    </div>
+    
+    <div class="footer-section">
+      <h4>{{ contentService.content().contact }}</h4>
+      <p>{{ contentService.content().manager }}: {{ config.managerName }}</p>
+      <p>{{ contentService.content().phone }}: <a [href]="'tel:' + config.managerPhone">{{ config.managerPhone }}</a></p>
+      <div class="social-footer">
+        <a [href]="config.whatsappChannel" target="_blank" class="social-link">{{ contentService.content().whatsappText }}</a>
+        <a [href]="config.telegramChannel" target="_blank" class="social-link">{{ contentService.content().telegramText }}</a>
+      </div>
+    </div>
+    
+    <div class="footer-section">
+      <h4>{{ contentService.content().quickLinks }}</h4>
+      <ul>
+        <li><a routerLink="/">{{ contentService.content().home }}</a></li>
+        <li><a routerLink="/properties/flats">{{ contentService.content().apartments }}</a></li>
+        <li><a routerLink="/properties/houses">{{ contentService.content().houses }}</a></li>
+        <li><a routerLink="/properties/plots">{{ contentService.content().land }}</a></li>
+        <li><a routerLink="/properties/commercial">{{ contentService.content().commercial }}</a></li>
+        <li><a routerLink="/properties/luxury">{{ contentService.content().luxury }}</a></li>
+        <li><a routerLink="/about">{{ contentService.content().aboutUs }}</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; {{ currentYear }} {{ config.companyName }}. {{ contentService.content().allRightsReserved }}</p>
+  </div>
+</footer>

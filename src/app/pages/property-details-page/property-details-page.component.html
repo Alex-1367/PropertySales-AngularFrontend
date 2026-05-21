@@ -1,0 +1,222 @@
+<!-- src/app/pages/property-details-page/property-details-page.component.html -->
+<app-header />
+
+<main class="main">
+  <div class="container">
+    @if (property()) {
+      <div class="property-details">
+        <div class="back-link">
+          <a routerLink="/">{{ contentService.content().backToProperties }}</a>
+        </div>
+        
+        <h1>{{ property()!.title }}</h1>
+        
+        <!-- Key Information Section - Placed before gallery -->
+        <div class="key-info-section">
+          <div class="price-large">
+            {{ formatPrice(property()!.price) }}
+          </div>
+          
+          <div class="location-large">
+            📍 {{ property()!.location || property()!.city || property()!.region || 'Montenegro' }}
+          </div>
+          
+          <div class="quick-stats">
+            @if (property()!.size) {
+              <div class="stat">
+                <span class="stat-icon">📐</span>
+                <span class="stat-value">{{ property()!.size }} m²</span>
+              </div>
+            }
+            @if (property()!.bedrooms) {
+              <div class="stat">
+                <span class="stat-icon">🛏️</span>
+                <span class="stat-value">{{ property()!.bedrooms }} {{ contentService.content().bedroomsText }}</span>
+              </div>
+            }
+            @if (property()!.bathrooms) {
+              <div class="stat">
+                <span class="stat-icon">🛁</span>
+                <span class="stat-value">{{ property()!.bathrooms }} {{ contentService.content().bathroomsText }}</span>
+              </div>
+            }
+            @if (property()!.distanceToSea) {
+              <div class="stat">
+                <span class="stat-icon">🌊</span>
+                <span class="stat-value">{{ property()!.distanceToSea }}m {{ contentService.content().toSeaText }}</span>
+              </div>
+            }
+          </div>
+        </div>
+        
+        <!-- Gallery Section -->
+        <div class="gallery">
+          <div class="main-image-container">
+            <button 
+              *ngIf="allImages().length > 1" 
+              class="nav-btn prev" 
+              (click)="prevImage()"
+              aria-label="Previous image"
+            >
+              ❮
+            </button>
+            
+            <div class="main-image">
+              <img 
+                [src]="currentImage()" 
+                [alt]="property()!.title"
+                (error)="onImageError($event)"
+                loading="eager"
+                (click)="openLightbox(allImages().indexOf(currentImage()))"
+              >
+            </div>
+            
+            <button 
+              *ngIf="allImages().length > 1" 
+              class="nav-btn next" 
+              (click)="nextImage()"
+              aria-label="Next image"
+            >
+              ❯
+            </button>
+          </div>
+          
+          @if (allImages().length > 1) {
+            <div class="thumbnails">
+              @for (img of allImages(); track $index) {
+                <img 
+                  [src]="img" 
+                  (click)="currentImage.set(img)"
+                  [class.active]="img === currentImage()"
+                  loading="lazy"
+                  [attr.aria-label]="'Thumbnail ' + ($index + 1)"
+                >
+              }
+            </div>
+          }
+        </div>
+        
+        <!-- Detailed Info Grid -->
+        <div class="info-grid">
+          <div class="price-section">
+            <span class="label">{{ contentService.content().priceLabel }}</span>
+            <span class="value">{{ formatPrice(property()!.price) }}</span>
+          </div>
+          
+          @if (property()!.size) {
+            <div class="info-item">
+              <span class="label">{{ contentService.content().areaLabel }}</span>
+              <span class="value">{{ property()!.size }} m²</span>
+            </div>
+          }
+          
+          @if (property()!.bedrooms) {
+            <div class="info-item">
+              <span class="label">{{ contentService.content().bedroomsLabel }}</span>
+              <span class="value">{{ property()!.bedrooms }}</span>
+            </div>
+          }
+          
+          @if (property()!.bathrooms) {
+            <div class="info-item">
+              <span class="label">{{ contentService.content().bathroomsLabel }}</span>
+              <span class="value">{{ property()!.bathrooms }}</span>
+            </div>
+          }
+          
+          @if (property()!.floor !== undefined && property()!.floor !== null) {
+            <div class="info-item">
+              <span class="label">{{ contentService.content().floorLabel }}</span>
+              <span class="value">{{ property()!.floor }}</span>
+            </div>
+          }
+          
+          @if (property()!.distanceToSea) {
+            <div class="info-item">
+              <span class="label">{{ contentService.content().distanceToSeaLabell }}</span>
+              <span class="value">{{ property()!.distanceToSea }} m</span>
+            </div>
+          }
+          
+          <div class="info-item">
+            <span class="label">{{ contentService.content().locationLabel }}</span>
+            <span class="value">{{ property()!.location || property()!.city || property()!.region || 'Montenegro' }}</span>
+          </div>
+        </div>
+        
+        @if (property()!.features && property()!.features!.length > 0) {
+          <div class="features">
+            <h3>{{ contentService.content().featuresAmenities }}</h3>
+            <div class="features-list">
+              @for (feature of property()!.features; track feature) {
+                <span class="feature-tag">{{ formatFeature(feature) }}</span>
+              }
+            </div>
+          </div>
+        }
+        
+        @if (property()!.description_en || property()!.description_he) {
+          <div class="description">
+            <h3>{{ contentService.content().description }}</h3>
+            @if (property()!.description_en) {
+              <div class="description-text">
+                <h4>English</h4>
+                <p>{{ property()!.description_en }}</p>
+              </div>
+            }
+            @if (property()!.description_he) {
+              <div class="description-text">
+                <h4>Русский / Hebrew</h4>
+                <p>{{ property()!.description_he }}</p>
+              </div>
+            }
+          </div>
+        }
+        
+        <div class="contact-section">
+          <h3>{{ contentService.content().interestedText }}</h3>
+          <p>{{ contentService.content().contactManager }}</p>
+          <div class="contact-buttons">
+            <a [href]="'tel:' + config.managerPhone" class="contact-btn call">
+              📞 {{ contentService.content().callText }} {{ config.managerPhone }}
+            </a>
+            <a [href]="getWhatsappLink()" target="_blank" rel="noopener noreferrer" class="contact-btn whatsapp">
+              💬 {{ contentService.content().whatsappText }}
+            </a>
+            <a [href]="getTelegramLink()" target="_blank" rel="noopener noreferrer" class="contact-btn telegram">
+              📱 {{ contentService.content().telegramText }}
+            </a>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="not-found">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h2>{{ contentService.content().propertyNotFound }}</h2>
+        <p>{{ contentService.content().propertyNotFoundDesc }}</p>
+        <a routerLink="/" class="back-home">{{ contentService.content().backToHome }}</a>
+      </div>
+    }
+  </div>
+</main>
+
+<!-- Lightbox Modal -->
+@if (showLightbox()) {
+  <div class="lightbox" (click)="closeLightbox()">
+    <button class="lightbox-close" (click)="closeLightbox()" aria-label="Close">✕</button>
+    <button class="lightbox-prev" (click)="$event.stopPropagation(); prevLightboxImage()" aria-label="Previous image">❮</button>
+    <button class="lightbox-next" (click)="$event.stopPropagation(); nextLightboxImage()" aria-label="Next image">❯</button>
+    <img 
+      [src]="allImages()[lightboxIndex()]" 
+      [alt]="property()!.title"
+      (click)="$event.stopPropagation()"
+    >
+    <div class="lightbox-counter">{{ lightboxIndex() + 1 }} / {{ allImages().length }}</div>
+  </div>
+}
+
+<app-footer />

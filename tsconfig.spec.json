@@ -1,0 +1,12 @@
+// tsconfig.spec.json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": ["jasmine"],
+    "module": "CommonJS",
+    "target": "ES2022",
+    "useDefineForClassFields": false
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+}

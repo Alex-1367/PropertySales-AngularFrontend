@@ -1,0 +1,71 @@
+<!-- src/app/components/filter-bar/filter-bar.component.html -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Property Type</label>
+    <select 
+      [(ngModel)]="filters.type" 
+      (ngModelChange)="applyFilters()"
+      [disabled]="fixedType !== null"
+    >
+      @if (showAllTypes && !fixedType) {
+        <option value="">{{ contentService.content().allTypesText || 'All Types' }}</option>
+      }
+      @for (type of getVisiblePropertyTypes(); track type.value) {
+        <option [value]="type.value">{{ type.label }}</option>
+      }
+    </select>
+  </div>
+  
+  <div class="filter-group">
+    <label>Min Price (€)</label>
+    <input 
+      type="number" 
+      [(ngModel)]="filters.minPrice" 
+      (ngModelChange)="applyFilters()"
+      placeholder="Min"
+    >
+  </div>
+  
+  <div class="filter-group">
+    <label>Max Price (€)</label>
+    <input 
+      type="number" 
+      [(ngModel)]="filters.maxPrice" 
+      (ngModelChange)="applyFilters()"
+      placeholder="Max"
+    >
+  </div>
+  
+  <div class="filter-group">
+    <label>Location</label>
+    <input 
+      type="text" 
+      [(ngModel)]="filters.location" 
+      (ngModelChange)="applyFilters()"
+      placeholder="City or region"
+    >
+  </div>
+  
+  <div class="filter-group">
+    <label>Min Size (m²)</label>
+    <input 
+      type="number" 
+      [(ngModel)]="filters.minSize" 
+      (ngModelChange)="applyFilters()"
+      placeholder="Min m²"
+    >
+  </div>
+  
+  <div class="filter-group">
+    <label>Bedrooms</label>
+    <select [(ngModel)]="filters.bedrooms" (ngModelChange)="applyFilters()">
+      <option [ngValue]="null">Any</option>
+      <option [ngValue]="1">1+</option>
+      <option [ngValue]="2">2+</option>
+      <option [ngValue]="3">3+</option>
+      <option [ngValue]="4">4+</option>
+    </select>
+  </div>
+  
+  <button class="reset-btn" (click)="resetFilters()">{{ contentService.content().resetFiltersText }}</button>
+</div>

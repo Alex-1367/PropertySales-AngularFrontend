@@ -1,0 +1,284 @@
+/* src/app/pages/about-page/about-page.component.css */
+.main {
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.about-section {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.about-section h1 {
+  font-size: 36px;
+  margin-bottom: 32px;
+  color: #2c3e50;
+  position: relative;
+  display: inline-block;
+}
+
+.about-section h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: #3498db;
+  border-radius: 2px;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 48px;
+}
+
+.about-text p {
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.about-text h2 {
+  font-size: 24px;
+  margin: 24px 0 16px;
+  color: #2c3e50;
+}
+
+.about-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-text li {
+  padding: 10px 0;
+  color: #555;
+  border-bottom: 1px solid #f0f0f0;
+  transition: transform 0.2s;
+}
+
+.about-text li:hover {
+  transform: translateX(5px);
+  color: #3498db;
+}
+
+.about-text li:last-child {
+  border-bottom: none;
+}
+
+.contact-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.3s;
+}
+
+.contact-info:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.contact-info p {
+  margin: 14px 0;
+}
+
+.contact-info strong {
+  color: #2c3e50;
+  min-width: 100px;
+  display: inline-block;
+}
+
+.contact-info a {
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-info a:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.manager-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  padding: 28px 24px;
+  text-align: center;
+  height: fit-content;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.manager-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.manager-photo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid #3498db;
+  padding: 3px;
+  transition: transform 0.3s;
+}
+
+.manager-card:hover .manager-photo {
+  transform: scale(1.02);
+}
+
+.manager-card h3 {
+  font-size: 22px;
+  margin-bottom: 6px;
+  color: #2c3e50;
+}
+
+.manager-title {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.manager-phone {
+  font-size: 18px;
+  font-weight: 600;
+  color: #3498db;
+  margin-bottom: 20px;
+}
+
+.manager-social {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.social-btn.whatsapp {
+  background: #25d366;
+}
+
+.social-btn.telegram {
+  background: #0088cc;
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.social-btn:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .about-content {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main {
+    min-height: calc(100vh - 180px);
+  }
+  
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .about-section h1 {
+    font-size: 28px;
+  }
+  
+  .about-section h1::after {
+    width: 50px;
+  }
+  
+  .about-text h2 {
+    font-size: 22px;
+  }
+  
+  .about-text p {
+    font-size: 15px;
+  }
+  
+  .about-text li {
+    font-size: 14px;
+  }
+  
+  .manager-card {
+    order: -1;
+    margin-bottom: 20px;
+  }
+  
+  .contact-info p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .contact-info strong {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .about-section h1 {
+    font-size: 24px;
+  }
+  
+  .manager-photo {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .manager-card h3 {
+    font-size: 20px;
+  }
+  
+  .manager-phone {
+    font-size: 16px;
+  }
+  
+  .social-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .contact-info {
+    padding: 16px;
+  }
+}

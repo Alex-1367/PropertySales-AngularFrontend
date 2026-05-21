@@ -1,0 +1,32 @@
+<!-- src/app/components/pagination/pagination.component.html -->
+@if (totalPages() > 1) {
+  <div class="pagination">
+    <button 
+      (click)="goToPage(currentPage() - 1)"
+      [disabled]="currentPage() === 1"
+      class="page-btn"
+    >
+      ← {{ contentService.content().previousText || 'Previous' }}
+    </button>
+    
+    <div class="page-numbers">
+      @for (page of visiblePages(); track page) {
+        <button 
+          (click)="goToPage(page)"
+          [class.active]="page === currentPage()"
+          class="page-num"
+        >
+          {{ page }}
+        </button>
+      }
+    </div>
+    
+    <button 
+      (click)="goToPage(currentPage() + 1)"
+      [disabled]="currentPage() === totalPages()"
+      class="page-btn"
+    >
+      {{ contentService.content().nextText || 'Next' }} →
+    </button>
+  </div>
+}

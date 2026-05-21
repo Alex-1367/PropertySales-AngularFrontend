@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://prus-api2.burgas275.workers.dev",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "logLevel": "debug"
+  }
+}

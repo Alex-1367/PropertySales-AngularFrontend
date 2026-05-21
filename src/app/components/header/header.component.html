@@ -1,0 +1,46 @@
+<!-- src/app/components/header/header.component.html -->
+<header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <a routerLink="/" (click)="closeMenu()">
+        <h1>{{ config.companyName }}</h1>
+      </a>
+    </div>
+    
+    <div class="header-right">
+      <div class="language-switcher">
+        <button 
+          [class.active]="languageService.isEnglish()"
+          (click)="setLanguage('en')"
+          class="lang-btn"
+        >
+          EN
+        </button>
+        <span class="lang-separator">/</span>
+        <button 
+          [class.active]="languageService.isRussian()"
+          (click)="setLanguage('ru')"
+          class="lang-btn"
+        >
+          RU
+        </button>
+      </div>
+      
+      <button class="mobile-menu-btn" (click)="toggleMenu()" aria-label="Menu">
+        ☰
+      </button>
+    </div>
+    
+    <nav [class.active]="menuOpen()">
+      <ul>
+        <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a></li>
+        <li><a routerLink="/properties/flats" routerLinkActive="active" (click)="closeMenu()">Apartments</a></li>
+        <li><a routerLink="/properties/houses" routerLinkActive="active" (click)="closeMenu()">Houses</a></li>
+        <li><a routerLink="/properties/plots" routerLinkActive="active" (click)="closeMenu()">Land</a></li>
+        <li><a routerLink="/properties/commercial" routerLinkActive="active" (click)="closeMenu()">Commercial</a></li>
+        <li><a routerLink="/properties/luxury" routerLinkActive="active" (click)="closeMenu()">Luxury</a></li>
+        <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About Us</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
