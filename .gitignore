@@ -1,0 +1,7 @@
+node_modules
+.angular
+.wrangler
+wrangler.toml
+data.http
+data.json
+
