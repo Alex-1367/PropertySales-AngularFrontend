@@ -1,15 +1,33 @@
-<!-- src/app/pages/property-details-page/property-details-page.component.html -->
+<!-- property-details-page.component.html -->
 <app-header />
 
 <main class="main">
   <div class="container">
-    @if (property()) {
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading property details...</div>
+        <div class="loading-subtext">Please wait while we fetch the data</div>
+      </div>
+    } @else if (property()) {
       <div class="property-details">
         <div class="back-link">
           <a routerLink="/">{{ contentService.content().backToProperties }}</a>
         </div>
         
         <h1>{{ property()!.title }}</h1>
+        
+        <!-- Property ID Badge -->
+        <div class="property-id-badge">
+          Property ID: {{ property()!.id }} | Type: {{ getPropertyTypeDisplay() }}
+          @if (property()!.source === 'luxury') {
+            <span class="luxury-badge">⭐ Premium</span>
+          }
+          @if (property()!.source === 'statusm') {
+            <span class="luxury-badge">🏠 StatusM</span>
+          }
+        </div>
         
         <!-- Key Information Section - Placed before gallery -->
         <div class="key-info-section">
@@ -18,7 +36,7 @@
           </div>
           
           <div class="location-large">
-            📍 {{ property()!.location || property()!.city || property()!.region || 'Montenegro' }}
+            📍 {{ getFullLocation() }}
           </div>
           
           <div class="quick-stats">
@@ -28,22 +46,28 @@
                 <span class="stat-value">{{ property()!.size }} m²</span>
               </div>
             }
-            @if (property()!.bedrooms) {
+            @if (property()!.bedrooms !== undefined && property()!.bedrooms !== null) {
               <div class="stat">
                 <span class="stat-icon">🛏️</span>
-                <span class="stat-value">{{ property()!.bedrooms }} {{ contentService.content().bedroomsText }}</span>
+                <span class="stat-value">{{ property()!.bedrooms }} {{ property()!.bedrooms === 1 ? 'Bedroom' : 'Bedrooms' }}</span>
               </div>
             }
-            @if (property()!.bathrooms) {
+            @if (property()!.bathrooms !== undefined && property()!.bathrooms !== null) {
               <div class="stat">
                 <span class="stat-icon">🛁</span>
-                <span class="stat-value">{{ property()!.bathrooms }} {{ contentService.content().bathroomsText }}</span>
+                <span class="stat-value">{{ property()!.bathrooms }} {{ property()!.bathrooms === 1 ? 'Bathroom' : 'Bathrooms' }}</span>
               </div>
             }
             @if (property()!.distanceToSea) {
               <div class="stat">
                 <span class="stat-icon">🌊</span>
-                <span class="stat-value">{{ property()!.distanceToSea }}m {{ contentService.content().toSeaText }}</span>
+                <span class="stat-value">{{ property()!.distanceToSea }}m to sea</span>
+              </div>
+            }
+            @if (property()!.floor !== undefined && property()!.floor !== null && property()!.floor >= 0) {
+              <div class="stat">
+                <span class="stat-icon">🏢</span>
+                <span class="stat-value">Floor {{ property()!.floor }}</span>
               </div>
             }
           </div>
@@ -52,14 +76,15 @@
         <!-- Gallery Section -->
         <div class="gallery">
           <div class="main-image-container">
-            <button 
-              *ngIf="allImages().length > 1" 
-              class="nav-btn prev" 
-              (click)="prevImage()"
-              aria-label="Previous image"
-            >
-              ❮
-            </button>
+            @if (hasMultipleImages()) {
+              <button 
+                class="nav-btn prev" 
+                (click)="prevImage()"
+                aria-label="Previous image"
+              >
+                ❮
+              </button>
+            }
             
             <div class="main-image">
               <img 
@@ -71,17 +96,18 @@
               >
             </div>
             
-            <button 
-              *ngIf="allImages().length > 1" 
-              class="nav-btn next" 
-              (click)="nextImage()"
-              aria-label="Next image"
-            >
-              ❯
-            </button>
+            @if (hasMultipleImages()) {
+              <button 
+                class="nav-btn next" 
+                (click)="nextImage()"
+                aria-label="Next image"
+              >
+                ❯
+              </button>
+            }
           </div>
           
-          @if (allImages().length > 1) {
+          @if (hasMultipleImages()) {
             <div class="thumbnails">
               @for (img of allImages(); track $index) {
                 <img 
@@ -90,13 +116,18 @@
                   [class.active]="img === currentImage()"
                   loading="lazy"
                   [attr.aria-label]="'Thumbnail ' + ($index + 1)"
+                  (error)="onImageError($event)"
                 >
               }
+            </div>
+          } @else if (allImages().length === 1) {
+            <div class="single-image-note">
+              <span>📸 Single image available</span>
             </div>
           }
         </div>
         
-        <!-- Detailed Info Grid -->
+        <!-- Detailed Info Grid - Expanded with more characteristics -->
         <div class="info-grid">
           <div class="price-section">
             <span class="label">{{ contentService.content().priceLabel }}</span>
@@ -110,21 +141,21 @@
             </div>
           }
           
-          @if (property()!.bedrooms) {
+          @if (property()!.bedrooms !== undefined && property()!.bedrooms !== null) {
             <div class="info-item">
               <span class="label">{{ contentService.content().bedroomsLabel }}</span>
               <span class="value">{{ property()!.bedrooms }}</span>
             </div>
           }
           
-          @if (property()!.bathrooms) {
+          @if (property()!.bathrooms !== undefined && property()!.bathrooms !== null) {
             <div class="info-item">
               <span class="label">{{ contentService.content().bathroomsLabel }}</span>
               <span class="value">{{ property()!.bathrooms }}</span>
             </div>
           }
           
-          @if (property()!.floor !== undefined && property()!.floor !== null) {
+          @if (property()!.floor !== undefined && property()!.floor !== null && property()!.floor >= 0) {
             <div class="info-item">
               <span class="label">{{ contentService.content().floorLabel }}</span>
               <span class="value">{{ property()!.floor }}</span>
@@ -140,8 +171,28 @@
           
           <div class="info-item">
             <span class="label">{{ contentService.content().locationLabel }}</span>
-            <span class="value">{{ property()!.location || property()!.city || property()!.region || 'Montenegro' }}</span>
+            <span class="value">{{ getFullLocation() }}</span>
           </div>
+          
+          <!-- Additional property characteristics -->
+          <div class="info-item">
+            <span class="label">Property Type</span>
+            <span class="value">{{ getPropertyTypeDisplay() }}</span>
+          </div>
+          
+          @if (property()!.source) {
+            <div class="info-item">
+              <span class="label">Source</span>
+              <span class="value">{{ property()!.source === 'luxury' ? 'Premium Collection' : (property()!.source | titlecase) }}</span>
+            </div>
+          }
+          
+          @if (property()!.status) {
+            <div class="info-item">
+              <span class="label">Status</span>
+              <span class="value">{{ property()!.status | titlecase }}</span>
+            </div>
+          }
         </div>
         
         @if (property()!.features && property()!.features!.length > 0) {
@@ -208,14 +259,19 @@
 @if (showLightbox()) {
   <div class="lightbox" (click)="closeLightbox()">
     <button class="lightbox-close" (click)="closeLightbox()" aria-label="Close">✕</button>
-    <button class="lightbox-prev" (click)="$event.stopPropagation(); prevLightboxImage()" aria-label="Previous image">❮</button>
-    <button class="lightbox-next" (click)="$event.stopPropagation(); nextLightboxImage()" aria-label="Next image">❯</button>
+    @if (hasMultipleImages()) {
+      <button class="lightbox-prev" (click)="$event.stopPropagation(); prevLightboxImage()" aria-label="Previous image">❮</button>
+      <button class="lightbox-next" (click)="$event.stopPropagation(); nextLightboxImage()" aria-label="Next image">❯</button>
+    }
     <img 
       [src]="allImages()[lightboxIndex()]" 
       [alt]="property()!.title"
       (click)="$event.stopPropagation()"
+      (error)="onImageError($event)"
     >
-    <div class="lightbox-counter">{{ lightboxIndex() + 1 }} / {{ allImages().length }}</div>
+    @if (hasMultipleImages()) {
+      <div class="lightbox-counter">{{ lightboxIndex() + 1 }} / {{ allImages().length }}</div>
+    }
   </div>
 }
 

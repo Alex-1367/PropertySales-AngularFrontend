@@ -3,8 +3,8 @@ import { SiteConfig } from '../models/property.model';
 
 export const SITE_CONFIG: SiteConfig = {
   companyName: 'imbcargo-montenegro',
-  managerName: 'Александр Петрович',
-  managerPhone: '+382 68 123 456',
+  managerName: 'Игорь Николаевич',
+  managerPhone: '+000 00 000 000',
   whatsappChannel: 'https://wa.me/38268123456',
   telegramChannel: 'https://t.me/imbcargo_montenegro',
   itemsPerPage: 20,
